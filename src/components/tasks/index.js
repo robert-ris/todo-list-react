@@ -18,7 +18,7 @@ export default memo(() => {
 
   const columns = [
     {
-      title: 'Name',
+      title: 'Task Name',
       dataIndex: 'name',
       key: 'name',
       render: text => <a>{text}</a>,
