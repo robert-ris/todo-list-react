@@ -1,104 +1,123 @@
-import React, { useEffect, memo, useState } from 'react';
+import React, { useEffect, memo, useCallback, useState } from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import 'antd/dist/antd.css';
-import { Table, Tag, Space } from 'antd';
+import { Table, Tag, Space, Popconfirm, Button } from 'antd';
+import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
+import { EditTaskModal } from './components';
 
 export default memo(() => {
   const dispatch = useDispatch();
 
-  const test = useState(state => state)
+  const tasks = useSelector(state => (state.tasks && state.tasks.tasksList) || []);
+  const task = useSelector((state) => (state.tasks && state.tasks.task) || {});
 
-  console.log('test', test)
+  const [ editTaskModal, setEditModal ] = useState(false);
+  const [ idTask, setIdTask ] = useState(false);
+
+  const triggerEditTaskModal = useCallback(() => setEditModal((state) => !state));
+
+  const triggerEditTask = useCallback((id) => {
+    setIdTask(id);
+    triggerEditTaskModal()
+  })
 
   useEffect(() => {
+    if (idTask) {
+      dispatch({
+        type: "tasks/GET_TASK",
+        payload: {
+          id: task.id
+        },
+      });
+    }
+  }, [idTask]);
+
+  const triggerRemoveTask = useCallback((id) => {
     dispatch({
-      type: "tasks/GET_TASKS",
-    });
-  }, []);
+      type: 'tasks/DELETE_TASK',
+      payload: id
+    })
+  })
+
+  const triggerNotFinished = useCallback((id) => {
+    dispatch({
+      type: 'tasks/UPDATE_STATUS',
+      payload: {
+        id,
+        status: 0
+      }
+    })
+  }, [])
+
+  const triggerFinished = useCallback((id) => {
+    dispatch({
+      type: 'tasks/UPDATE_STATUS',
+      payload: {
+        id,
+        status: 1
+      }
+    })
+  }, [])
+
 
   const columns = [
     {
       title: 'Task Name',
-      dataIndex: 'name',
-      key: 'name',
-      render: text => <a>{text}</a>,
+      dataIndex: 'taskName',
+      key: 'taskName'
     },
     {
-      title: 'Age',
-      dataIndex: 'age',
-      key: 'age',
+      title: 'Task Description',
+      dataIndex: 'taskDescription',
+      key: 'taskDescription',
     },
     {
-      title: 'Address',
-      dataIndex: 'address',
-      key: 'address',
-    },
-    {
-      title: 'Tags',
-      key: 'tags',
-      dataIndex: 'tags',
-      render: tags => (
-        <>
-          {tags.map(tag => {
-            let color = tag.length > 5 ? 'geekblue' : 'green';
-            if (tag === 'loser') {
-              color = 'volcano';
-            }
-            return (
-              <Tag color={color} key={tag}>
-                {tag.toUpperCase()}
-              </Tag>
-            );
-          })}
-        </>
-      ),
+      title: 'Status',
+      key: 'status',
+      render: record => {
+        if (record.status === 1) {
+          return (
+            <Tag onClick={() => triggerNotFinished(record.id)} color="blue" style={{ hover: 'pointer'}}>
+              Finished
+            </Tag>
+          )
+          
+        } else {
+          return <Tag onClick={() => triggerFinished(record.id)} color="red">Not Finished</Tag>
+        }
+      }
     },
     {
       title: 'Action',
       key: 'action',
       render: (text, record) => (
         <Space size="middle">
-          <a>Invite {record.name}</a>
-          <a>Delete</a>
+           <Button type="secondary" onClick={() => triggerEditTask(record.id)}>
+            <EditOutlined />
+          </Button>
+          <Popconfirm title="Are you sure you want to delete this task?" onConfirm={() => triggerRemoveTask(record.id)}>
+            <Button type="secondary">
+              <DeleteOutlined />
+            </Button>
+          </Popconfirm>
         </Space>
       ),
     },
   ];
 
-  const data = [
-    {
-      key: '1',
-      name: 'John Brown',
-      age: 32,
-      address: 'New York No. 1 Lake Park',
-      tags: ['nice', 'developer'],
-    },
-    {
-      key: '2',
-      name: 'Jim Green',
-      age: 42,
-      address: 'London No. 1 Lake Park',
-      tags: ['loser'],
-    },
-    {
-      key: '3',
-      name: 'Joe Black',
-      age: 32,
-      address: 'Sidney No. 1 Lake Park',
-      tags: ['cool', 'teacher'],
-    },
-  ];
-
-
   return (
+    <div>
     <Table
-      style={{padding: '40px'}}
-      className="utils__scrollTable"
-      scroll={{ x: "100%" }}
-      rowKey="id"
-      columns={columns}
-      dataSource={(data && Array.isArray(data) && data) || []}
-      pagination={false}
-    />
+        style={{padding: '40px'}}
+        className="utils__scrollTable"
+        scroll={{ x: "100%" }}
+        rowKey="id"
+        columns={columns}
+        dataSource={(tasks && Array.isArray(tasks) && tasks) || []}
+        pagination={false}
+      />
+      < EditTaskModal open={editTaskModal} triggerOpenClose={triggerEditTaskModal} taskId={idTask} />
+    </div>
+ 
   );
 });

@@ -1,14 +1,15 @@
-import actions from './actions';
+import actions from './actions'
 
 const initialState = {
-  data: []
+  tasksList: [],
+  task: {}
 }
 
 export default function tasksReducer(state = initialState, action) {
-  switch (actions.type) {
+  switch (action.type) {
     case actions.SET_STATE:
-      return { ...state, ...actions.payload }
-    default: 
-      return state;
+      return { ...state, ...action.payload }
+    default:
+      return state
   }
 }

@@ -1,9 +1,9 @@
 import { all } from 'redux-saga/effects';
 
-import task from './tasks/sagas';
+import tasks from './tasks/sagas';
 
 export default function* rootSaga() {
 	yield all([
-		task()
+		tasks()
 	])
 }
