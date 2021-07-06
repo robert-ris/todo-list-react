@@ -22,15 +22,10 @@ export default memo(() => {
   })
 
   useEffect(() => {
-    if (idTask) {
-      dispatch({
-        type: "tasks/GET_TASK",
-        payload: {
-          id: task.id
-        },
-      });
-    }
-  }, [idTask]);
+    dispatch({
+      type: "tasks/GET_TASKS",
+    });
+  }, []);
 
   const triggerRemoveTask = useCallback((id) => {
     dispatch({

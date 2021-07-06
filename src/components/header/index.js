@@ -36,7 +36,6 @@ export default memo(() => {
         <div className="col-10">
         <FormItem>
           <Input
-            // style={{width: '760px', marginLeft: '10px', height: '42px'}}
             placeholder="New task"
             value={formik.values.taskName}
             onBlur={() => formik.handleBlur('taskName')}
