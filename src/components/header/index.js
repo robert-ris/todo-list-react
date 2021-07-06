@@ -32,31 +32,6 @@ export default memo(() => {
     <div className="header" >
       <h2>My To To List</h2>
       <div className="row">
-        {/* <FormItem>
-          <div className="col-7">
-            <Input
-              // style={{width: '760px', marginLeft: '10px', height: '42px'}}
-              placeholder="New task"
-              value={formik.values.taskName}
-              onBlur={() => formik.handleBlur('taskName')}
-              onChange={e => formik.setFieldValue('taskName', e.target.value)}
-            />
-          </div>
-          <div className="col-5">
-          <Button 
-              // style={{width: '150px', marginLeft: '10px', height: '42px'}}
-              key='submit'
-              className="addBtn" 
-              onClick={formik.handleSubmit}        
-            >Add</Button>
-          </div>
-          
-          {formik.errors.taskName && formik.touched.taskName ? 
-            (
-              <div style={{color: '#fff'}}>{formik.errors.taskName}</div>
-            ) : null
-          }
-        </FormItem> */}
 
         <div className="col-10">
         <FormItem>
