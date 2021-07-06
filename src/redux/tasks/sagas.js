@@ -164,12 +164,6 @@ export function* UPDATE_STATUS({ payload }) {
 		yield put({ 
       type: 'tasks/GET_TASKS',
     })
-    yield put({ 
-      type: 'tasks/GET_TASK',
-      payload: {
-        id: payload.id,
-      },
-    })
 		notification.success({
 			message: 'Success!',
 			description: 'Status updated!',
