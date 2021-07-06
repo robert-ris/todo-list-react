@@ -84,7 +84,7 @@ export default memo(({ open, triggerOpenClose, taskId }) => {
                 Return
               </Button>,
               <Button key="submit" type="primary" onClick={formik.handleSubmit} disabled={formik.isSubmitting}>
-                Upload
+                Update
               </Button>,
             ]}
           >
